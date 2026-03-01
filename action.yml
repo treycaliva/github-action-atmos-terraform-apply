@@ -63,6 +63,12 @@ outputs:
   status:
     description: Apply Status. Either 'succeeded' or 'failed'
     value: ${{ steps.apply.outputs.status }}
+  has-changes:
+    description: "Whether the plan has changes. Value is string 'true' or 'false'"
+    value: "${{ steps.plan-diff.outputs.has_changes }}"
+  plan-drifted:
+    description: "Whether the plan has drifted since original planning. Value is string 'true' or 'false'"
+    value: "${{ steps.plan-diff.outputs.plan_changed }}"
 
 runs:
   using: "composite"
@@ -401,6 +407,13 @@ runs:
         &> ${TERRAFORM_PLAN_OUTPUT_FILE}
 
         PLAN_CHANGED=$?
+
+        # Detect if plan has infrastructure changes
+        if grep -q "No changes. Your infrastructure matches the configuration." "${TERRAFORM_PLAN_OUTPUT_FILE}"; then
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+        else
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+        fi
 
         cat ${TERRAFORM_PLAN_OUTPUT_FILE}
 
