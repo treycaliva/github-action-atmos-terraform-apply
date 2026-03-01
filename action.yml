@@ -182,6 +182,18 @@ runs:
             stack: ${{ inputs.stack }}
             settingsPath: settings.integrations.github.gitops.artifact-storage.cosmos-endpoint
             outputPath: cosmos-endpoint
+          - component: ${{ inputs.component }}
+            stack: ${{ inputs.stack }}
+            settingsPath: settings.integrations.github.gitops.artifact-storage.gcp-project-id
+            outputPath: gcp-project-id
+          - component: ${{ inputs.component }}
+            stack: ${{ inputs.stack }}
+            settingsPath: settings.integrations.github.gitops.artifact-storage.gcp-firestore-database-name
+            outputPath: gcp-firestore-database-name
+          - component: ${{ inputs.component }}
+            stack: ${{ inputs.stack }}
+            settingsPath: settings.integrations.github.gitops.artifact-storage.gcp-firestore-collection-name
+            outputPath: gcp-firestore-collection-name
 
     - name: Install Terraform
       if: ${{ fromJson(steps.atmos-settings.outputs.settings).terraform-version != '' && fromJson(steps.atmos-settings.outputs.settings).terraform-version != 'null' }}
@@ -293,7 +305,7 @@ runs:
 
     - name: Retrieve Plan
       if: ${{ env.ACTIONS_ENABLED == 'true' && inputs.plan-storage == 'true'}}
-      uses: cloudposse/github-action-terraform-plan-storage@v1
+      uses: cloudposse/github-action-terraform-plan-storage@v2
       continue-on-error: true
       env:
         AWS_ACCESS_KEY_ID: ${{ steps.plan-storage-credentials.outputs.aws-access-key-id }}
@@ -313,12 +325,15 @@ runs:
         cosmosContainerName: ${{ fromJson(steps.atmos-settings.outputs.settings).cosmos-container-name }}
         cosmosDatabaseName: ${{ fromJson(steps.atmos-settings.outputs.settings).cosmos-database-name }}
         cosmosEndpoint: ${{ fromJson(steps.atmos-settings.outputs.settings).cosmos-endpoint }}
+        gcpProjectId: ${{ fromJson(steps.atmos-settings.outputs.settings).gcp-project-id }}
+        gcpFirestoreDatabaseName: ${{ fromJson(steps.atmos-settings.outputs.settings).gcp-firestore-database-name }}
+        gcpFirestoreCollectionName: ${{ fromJson(steps.atmos-settings.outputs.settings).gcp-firestore-collection-name }}
         tableName: ${{ fromJson(steps.atmos-settings.outputs.settings).terraform-state-table }}
         bucketName: ${{ fromJson(steps.atmos-settings.outputs.settings).terraform-state-bucket }}
 
     - name: Retrieve Lockfile
       if: ${{ env.ACTIONS_ENABLED == 'true' && inputs.plan-storage == 'true'}}
-      uses: cloudposse/github-action-terraform-plan-storage@v1
+      uses: cloudposse/github-action-terraform-plan-storage@v2
       continue-on-error: true
       env:
         AWS_ACCESS_KEY_ID: ${{ steps.plan-storage-credentials.outputs.aws-access-key-id }}
@@ -338,6 +353,9 @@ runs:
         cosmosContainerName: ${{ fromJson(steps.atmos-settings.outputs.settings).cosmos-container-name }}
         cosmosDatabaseName: ${{ fromJson(steps.atmos-settings.outputs.settings).cosmos-database-name }}
         cosmosEndpoint: ${{ fromJson(steps.atmos-settings.outputs.settings).cosmos-endpoint }}
+        gcpProjectId: ${{ fromJson(steps.atmos-settings.outputs.settings).gcp-project-id }}
+        gcpFirestoreDatabaseName: ${{ fromJson(steps.atmos-settings.outputs.settings).gcp-firestore-database-name }}
+        gcpFirestoreCollectionName: ${{ fromJson(steps.atmos-settings.outputs.settings).gcp-firestore-collection-name }}
         tableName: ${{ fromJson(steps.atmos-settings.outputs.settings).terraform-state-table }}
         bucketName: ${{ fromJson(steps.atmos-settings.outputs.settings).terraform-state-bucket }}
 
