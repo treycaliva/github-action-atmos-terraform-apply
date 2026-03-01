@@ -440,7 +440,11 @@ No inputs.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| `status` | Apply status. Either `succeeded` or `failed` |
+| `has-changes` | Whether the plan has changes. Value is string `true` or `false` |
+| `plan-drifted` | Whether the plan has drifted since original planning. Value is string `true` or `false` |
 <!-- markdownlint-restore -->
 
 
